@@ -36,6 +36,98 @@
             overflow-x: hidden;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
+            position: relative;
+        }
+
+        /* ===== NEW: AI ANIMATED BACKGROUND ===== */
+        .ai-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .neural-network {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .node {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: rgba(0, 255, 255, 0.6);
+            border-radius: 50%;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .connection {
+            position: absolute;
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 255, 0.3), transparent);
+            height: 1px;
+            transform-origin: left center;
+            animation: dataFlow 3s linear infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { 
+                opacity: 0.3;
+                transform: scale(1);
+                box-shadow: 0 0 5px rgba(0, 255, 255, 0.3);
+            }
+            50% { 
+                opacity: 1;
+                transform: scale(1.2);
+                box-shadow: 0 0 15px rgba(0, 255, 255, 0.8);
+            }
+        }
+
+        @keyframes dataFlow {
+            0% { opacity: 0; transform: scaleX(0); }
+            20% { opacity: 1; }
+            80% { opacity: 1; }
+            100% { opacity: 0; transform: scaleX(1); }
+        }
+
+        .ai-particles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+
+        .particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: rgba(255, 0, 255, 0.4);
+            border-radius: 50%;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) translateX(0); opacity: 0; }
+            20%, 80% { opacity: 1; }
+            50% { transform: translateY(-20px) translateX(10px); }
+        }
+
+        /* NEW: Cursor following effect */
+        .cursor-glow {
+            position: fixed;
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, rgba(0, 255, 255, 0.1) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: -1;
+            transition: all 0.1s ease;
+            mix-blend-mode: screen;
         }
         
         /* ===== LAYOUT UTILITIES ===== */
@@ -625,6 +717,28 @@
             resize: vertical;
             min-height: 120px;
         }
+
+        /* NEW: Form status messages */
+        .form-status {
+            margin-top: 20px;
+            padding: 16px;
+            border-radius: 12px;
+            text-align: center;
+            font-weight: 500;
+            display: none;
+        }
+
+        .form-status.success {
+            background: rgba(34, 197, 94, 0.15);
+            border: 1px solid rgba(34, 197, 94, 0.3);
+            color: #22c55e;
+        }
+
+        .form-status.error {
+            background: rgba(239, 68, 68, 0.15);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: #ef4444;
+        }
         
         /* ===== FOOTER ===== */
         .footer {
@@ -717,7 +831,7 @@
             color: rgba(255, 255, 255, 0.5);
         }
         
-        /* ===== RESPONSIVE DESIGN ===== */
+        /* ===== ENHANCED MOBILE RESPONSIVE ===== */
         @media (max-width: 768px) {
             .container {
                 padding: 0 20px;
@@ -747,6 +861,13 @@
             .hero-buttons {
                 flex-direction: column;
                 align-items: center;
+                gap: 16px;
+            }
+
+            .hero-buttons .btn {
+                width: 100%;
+                max-width: 300px;
+                justify-content: center;
             }
             
             .hero-stats {
@@ -758,15 +879,29 @@
                 grid-template-columns: 1fr;
                 gap: 24px;
             }
+
+            .service-card {
+                padding: 35px 25px;
+                margin: 0 10px;
+            }
             
             .portfolio-grid {
                 grid-template-columns: 1fr;
                 gap: 24px;
             }
+
+            .portfolio-item {
+                padding: 35px 25px;
+                margin: 0 10px;
+            }
             
             .contact-content {
                 grid-template-columns: 1fr;
                 gap: 60px;
+            }
+
+            .contact-form {
+                padding: 40px 25px;
             }
             
             .footer-content {
@@ -778,11 +913,29 @@
                 grid-template-columns: 1fr;
                 gap: 40px;
             }
+
+            /* NEW: Mobile-specific improvements */
+            .section-title {
+                font-size: clamp(2rem, 6vw, 3rem);
+            }
+
+            .section-subtitle {
+                font-size: clamp(1rem, 3vw, 1.2rem);
+            }
+
+            .hero-description {
+                font-size: clamp(1rem, 3vw, 1.1rem);
+            }
         }
         
         @media (max-width: 480px) {
+            .container {
+                padding: 0 16px;
+            }
+
             .hero-stats {
                 grid-template-columns: 1fr;
+                gap: 16px;
             }
             
             .services-grid {
@@ -790,17 +943,58 @@
             }
             
             .service-card {
-                padding: 32px 24px;
+                padding: 30px 20px;
+                margin: 0 5px;
             }
             
             .contact-form {
-                padding: 32px 24px;
+                padding: 32px 20px;
+            }
+
+            .portfolio-item {
+                padding: 30px 20px;
+                margin: 0 5px;
+            }
+
+            .stat-card {
+                padding: 25px 20px;
+            }
+
+            .contact-method {
+                padding: 20px 16px;
+            }
+        }
+
+        /* NEW: Mobile touch improvements */
+        @media (hover: none) and (pointer: coarse) {
+            .service-card:active {
+                transform: translateY(-4px);
+                background: rgba(255, 255, 255, 0.06);
+            }
+
+            .btn:active {
+                transform: scale(0.98);
+            }
+
+            .contact-method:active {
+                transform: translateX(4px);
+            }
+
+            .portfolio-item:active {
+                transform: translateY(-3px);
             }
         }
     </style>
 </head>
 <body>
-    <!-- HEADER & NAVIGATION -->
+    <!-- NEW: AI ANIMATED BACKGROUND -->
+    <div class="ai-background">
+        <div class="neural-network" id="neuralNetwork"></div>
+        <div class="ai-particles" id="aiParticles"></div>
+    </div>
+    <div class="cursor-glow" id="cursorGlow"></div>
+
+    <!-- HEADER & NAVIGATION (UNCHANGED) -->
     <header class="header">
         <nav class="nav" id="navbar">
             <div class="nav-container">
@@ -830,7 +1024,7 @@
         </nav>
     </header>
 
-    <!-- HERO SECTION -->
+    <!-- HERO SECTION (UNCHANGED) -->
     <section id="home" class="hero">
         <div class="container">
             <div class="hero-content">
@@ -869,7 +1063,7 @@
         </div>
     </section>
 
-    <!-- SERVICES SECTION -->
+    <!-- SERVICES SECTION (UNCHANGED) -->
     <section id="services" class="section services">
         <div class="container">
             <div class="section-header">
@@ -946,7 +1140,7 @@
         </div>
     </section>
 
-    <!-- PORTFOLIO SECTION -->
+    <!-- PORTFOLIO SECTION (UNCHANGED) -->
     <section id="portfolio" class="section portfolio">
         <div class="container">
             <div class="section-header">
@@ -1008,7 +1202,7 @@
         </div>
     </section>
 
-    <!-- CONTACT SECTION -->
+    <!-- ENHANCED CONTACT SECTION WITH EMAIL INTEGRATION -->
     <section id="contact" class="section contact">
         <div class="container">
             <div class="contact-content">
@@ -1036,41 +1230,54 @@
                 
                 <div class="contact-form">
                     <h3 class="form-title">Start Your Project Today</h3>
-                    <p class="form-subtitle">Get instant response via WhatsApp</p>
+                    <p class="form-subtitle">Get instant response via WhatsApp or Email</p>
                     
-                    <div class="form-group">
-                        <input type="text" class="form-control" id="userName" placeholder="Your Name" required>
-                    </div>
-                    <div class="form-group">
-                        <input type="email" class="form-control" id="userEmail" placeholder="Your Email" required>
-                    </div>
-                    <div class="form-group">
-                        <input type="text" class="form-control" id="userCompany" placeholder="Company (Optional)">
-                    </div>
-                    <div class="form-group">
-                        <select class="form-control" id="serviceSelect" required>
-                            <option value="">Select Service</option>
-                            <option value="Web Applications">Web Applications</option>
-                            <option value="Mobile Applications">Mobile Applications</option>
-                            <option value="AI Calling Solutions">AI Calling Solutions</option>
-                            <option value="Chatbot Development">Chatbot Development</option>
-                            <option value="SaaS Solutions">SaaS Solutions</option>
-                            <option value="AI Automation">AI Automation</option>
-                            <option value="AI Development">AI Development</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <textarea class="form-control" id="projectDescription" placeholder="Tell us about your project" rows="4"></textarea>
-                    </div>
-                    <button type="button" onclick="sendWhatsAppMessage()" class="btn btn-primary" style="width: 100%; justify-content: center;">
-                        💬 Send via WhatsApp
-                    </button>
+                    <!-- NEW: Enhanced form with email integration -->
+                    <form id="contactForm" action="https://formspree.io/f/mgvwwkbp" method="POST">
+                        <div class="form-group">
+                            <input type="text" class="form-control" name="name" id="userName" placeholder="Your Name" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="email" class="form-control" name="email" id="userEmail" placeholder="Your Email" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" name="company" id="userCompany" placeholder="Company (Optional)">
+                        </div>
+                        <div class="form-group">
+                            <select class="form-control" name="service" id="serviceSelect" required>
+                                <option value="">Select Service</option>
+                                <option value="Web Applications">Web Applications</option>
+                                <option value="Mobile Applications">Mobile Applications</option>
+                                <option value="AI Calling Solutions">AI Calling Solutions</option>
+                                <option value="Chatbot Development">Chatbot Development</option>
+                                <option value="SaaS Solutions">SaaS Solutions</option>
+                                <option value="AI Automation">AI Automation</option>
+                                <option value="AI Development">AI Development</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <textarea class="form-control" name="message" id="projectDescription" placeholder="Tell us about your project" rows="4"></textarea>
+                        </div>
+                        
+                        <!-- NEW: Dual submit buttons -->
+                        <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+                            <button type="submit" class="btn btn-primary" style="flex: 1; justify-content: center; min-width: 160px;">
+                                📧 Send Email
+                            </button>
+                            <button type="button" onclick="sendWhatsAppMessage()" class="btn btn-secondary" style="flex: 1; justify-content: center; min-width: 160px;">
+                                💬 WhatsApp
+                            </button>
+                        </div>
+                    </form>
+                    
+                    <!-- NEW: Form status display -->
+                    <div class="form-status" id="formStatus"></div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- FOOTER -->
+    <!-- FOOTER (UNCHANGED) -->
     <footer class="footer">
         <div class="container">
             <div class="footer-content">
@@ -1130,7 +1337,79 @@
     </footer>
 
     <script>
-        // ===== WHATSAPP INTEGRATION =====
+        // ===== NEW: AI BACKGROUND ANIMATION =====
+        function createNeuralNetwork() {
+            const container = document.getElementById('neuralNetwork');
+            const width = window.innerWidth;
+            const height = window.innerHeight;
+            
+            // Clear existing nodes
+            container.innerHTML = '';
+            
+            // Create nodes
+            const nodeCount = Math.floor((width * height) / 20000);
+            const nodes = [];
+            
+            for (let i = 0; i < nodeCount; i++) {
+                const node = document.createElement('div');
+                node.className = 'node';
+                const x = Math.random() * width;
+                const y = Math.random() * height;
+                node.style.left = x + 'px';
+                node.style.top = y + 'px';
+                node.style.animationDelay = Math.random() * 2 + 's';
+                container.appendChild(node);
+                nodes.push({ element: node, x, y });
+            }
+            
+            // Create connections between nearby nodes
+            for (let i = 0; i < nodes.length; i++) {
+                for (let j = i + 1; j < nodes.length; j++) {
+                    const dx = nodes[j].x - nodes[i].x;
+                    const dy = nodes[j].y - nodes[i].y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+                    
+                    if (distance < 120) {
+                        const connection = document.createElement('div');
+                        connection.className = 'connection';
+                        const angle = Math.atan2(dy, dx) * 180 / Math.PI;
+                        connection.style.left = nodes[i].x + 'px';
+                        connection.style.top = nodes[i].y + 'px';
+                        connection.style.width = distance + 'px';
+                        connection.style.transform = `rotate(${angle}deg)`;
+                        connection.style.animationDelay = Math.random() * 3 + 's';
+                        container.appendChild(connection);
+                    }
+                }
+            }
+        }
+        
+        function createParticles() {
+            const container = document.getElementById('aiParticles');
+            const particleCount = 25;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.top = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 6 + 's';
+                particle.style.animationDuration = (4 + Math.random() * 4) + 's';
+                container.appendChild(particle);
+            }
+        }
+        
+        // NEW: Cursor following effect
+        function initCursorGlow() {
+            const cursorGlow = document.getElementById('cursorGlow');
+            
+            document.addEventListener('mousemove', (e) => {
+                cursorGlow.style.left = (e.clientX - 100) + 'px';
+                cursorGlow.style.top = (e.clientY - 100) + 'px';
+            });
+        }
+
+        // ===== WHATSAPP INTEGRATION (UNCHANGED) =====
         function openWhatsApp(serviceType = 'general') {
             let message = 'Hi Adarsh, ';
             
@@ -1160,18 +1439,18 @@
 
             // Validation
             if (!name || !email) {
-                showAlert('Please fill in your name and email', 'error');
+                showFormStatus('Please fill in your name and email', 'error');
                 return;
             }
 
             if (!service) {
-                showAlert('Please select a service', 'error');
+                showFormStatus('Please select a service', 'error');
                 return;
             }
 
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             if (!emailRegex.test(email)) {
-                showAlert('Please enter a valid email address', 'error');
+                showFormStatus('Please enter a valid email address', 'error');
                 return;
             }
 
@@ -1187,26 +1466,72 @@
             const whatsappUrl = `https://wa.me/918197098847?text=${encodeURIComponent(message)}`;
             window.open(whatsappUrl, '_blank');
 
-            // Clear form
-            document.getElementById('userName').value = '';
-            document.getElementById('userEmail').value = '';
-            document.getElementById('userCompany').value = '';
-            document.getElementById('serviceSelect').value = '';
-            document.getElementById('projectDescription').value = '';
-
-            showAlert('Message sent via WhatsApp! Adarsh will respond shortly.', 'success');
+            showFormStatus('Message sent via WhatsApp! Adarsh will respond shortly.', 'success');
         }
 
-        function showAlert(message, type) {
-            // Simple alert implementation
-            alert(message);
+        // NEW: Form status display
+        function showFormStatus(message, type) {
+            const statusDiv = document.getElementById('formStatus');
+            statusDiv.textContent = message;
+            statusDiv.className = `form-status ${type}`;
+            statusDiv.style.display = 'block';
+            
+            setTimeout(() => {
+                statusDiv.style.display = 'none';
+            }, 5000);
         }
 
-        // ===== NAVIGATION & SCROLL EFFECTS =====
+        // NEW: Email form handling
+        document.getElementById('contactForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            const submitButton = this.querySelector('button[type="submit"]');
+            const originalText = submitButton.innerHTML;
+            
+            submitButton.innerHTML = '📧 Sending...';
+            submitButton.disabled = true;
+            
+            try {
+                const response = await fetch(this.action, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                });
+                
+                if (response.ok) {
+                    showFormStatus('✅ Email sent successfully! We will get back to you soon.', 'success');
+                    this.reset();
+                } else {
+                    throw new Error('Form submission failed');
+                }
+            } catch (error) {
+                showFormStatus('❌ Failed to send email. Please try WhatsApp or email directly.', 'error');
+            }
+            
+            submitButton.innerHTML = originalText;
+            submitButton.disabled = false;
+        });
+
+        // ===== NAVIGATION & SCROLL EFFECTS (UNCHANGED) =====
         document.addEventListener('DOMContentLoaded', function() {
             const navbar = document.getElementById('navbar');
             const navLinks = document.querySelectorAll('.nav-link');
             const sections = document.querySelectorAll('section[id]');
+
+            // NEW: Initialize AI background
+            createNeuralNetwork();
+            createParticles();
+            initCursorGlow();
+            
+            // Recreate network on resize
+            let resizeTimeout;
+            window.addEventListener('resize', () => {
+                clearTimeout(resizeTimeout);
+                resizeTimeout = setTimeout(createNeuralNetwork, 300);
+            });
 
             // Smooth scrolling for navigation links
             document.querySelectorAll('a[href^="#"]').forEach(link => {
