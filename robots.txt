@@ -1,0 +1,12 @@
+User-agent: *
+Allow: /
+
+# SEO optimization
+Sitemap: https://your-username.github.io/your-repository-name/sitemap.xml
+
+# Allow search engines to index all pages
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot  
+Allow: /
