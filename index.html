@@ -1555,43 +1555,26 @@
     </section>
 
 
-    <!-- Fixed Medium Blog Section -->
+    <!-- Medium Blog Section -->
     <section id="blog" class="portfolio" style="background: linear-gradient(180deg, #0f0f0f 0%, #111111 100%);">
         <div class="container">
             <h2 class="section-title">Latest Blog Posts</h2>
-
-            <div id="loading-blog" style="display: none; text-align: center; color: #00ffff; margin: 10px 0; opacity: 0.6; font-size: 0.9rem;">
-                🔄 Updating latest posts...
+            <div id="loading-blog" style="text-align: center; color: #00ffff; margin: 40px 0;">
+                <div style="font-size: 1.2rem; margin-bottom: 10px;">Loading latest articles from Medium...</div>
+                <div style="font-size: 2rem;">⚡</div>
             </div>
-
-            <div id="blog-grid" class="blog-grid" style="
-                display: grid;
-                grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-                gap: 30px;
-                margin-top: 20px;
-            ">
-                <!-- Blog posts load here with fixed thumbnails -->
+            <div id="blog-grid" class="portfolio-grid" style="display: none;">
+                <!-- Blog posts will be dynamically inserted here -->
             </div>
-
             <div id="blog-error" style="display: none; text-align: center; color: #ff6b6b; margin: 40px 0;">
-                <div style="font-size: 1.1rem; margin-bottom: 15px;">Refreshing blog posts...</div>
-                <div>
-                    <a href="https://medium.com/@adarshmdys" target="_blank" 
-                       style="color: #00ffff; text-decoration: none; font-size: 1rem;">
-                        📖 Visit Medium Profile →
+                <div style="font-size: 1.1rem;">Unable to load blog posts at the moment.</div>
+                <div style="margin-top: 10px;">
+                    <a href="https://medium.com/@adarshmdys" target="_blank" style="color: #00ffff; text-decoration: none;">
+                        Visit my Medium profile directly →
                     </a>
                 </div>
             </div>
         </div>
-
-        <style>
-        @media (max-width: 768px) {
-            .blog-grid {
-                grid-template-columns: 1fr !important;
-                gap: 20px;
-            }
-        }
-        </style>
     </section>
 
     
@@ -1707,7 +1690,7 @@
                 <div class="footer-social">
                     <h4 class="footer-title">Follow Us</h4>
                     <div class="social-links">
-                        <a href="https://www.linkedin.com/in/adarshm19/" target="_blank" class="social-link" title="LinkedIn">💼</a>
+                        <a href="https://www.https://www.linkedin.com/in/adarsh-m-boostmysites/" target="_blank" class="social-link" title="LinkedIn">💼</a>
                         <a href="https://github.com/adarshm-boostmysites" target="_blank" class="social-link" title="GitHub">🐙</a>
                         <a href="mailto:adarshm.boostmysites@gmail.com" target="_blank" class="social-link" title="Email">📧</a>
                         <a href="https://wa.me/918197098847" target="_blank" class="social-link" title="WhatsApp">💬</a>
@@ -1724,291 +1707,81 @@
     <script>
 
 
-    // FIXED Medium Blog Integration - Resolves thumbnail and latest post issues
-    class FixedMediumBlogManager {
-        constructor() {
-            this.loadingElement = document.getElementById('loading-blog');
-            this.blogGridElement = document.getElementById('blog-grid');
-            this.errorElement = document.getElementById('blog-error');
-            this.refreshInterval = null;
+    // Medium RSS to JSON fetcher
+    async function fetchMediumPosts() {
+        const loadingElement = document.getElementById('loading-blog');
+        const blogGridElement = document.getElementById('blog-grid');
+        const errorElement = document.getElementById('blog-error');
 
-            // Updated fallback with actual latest posts including today's NEW post
-            this.fallbackPosts = [
-                {
-                    title: "Why 85% of Indian Customers Leave After ONE Bad Experience (And How AI Can Save Your Business)",
-                    link: "https://medium.com/@adarshmdys/why-85-of-indian-customers-leave-after-one-bad-experience-343b5a40bf2f",
-                    pubDate: "2025-09-29 08:18:30",
-                    contentSnippet: "Every time a customer calls your business and gets frustrated with long wait times, confusing menus, or unhelpful responses, you're not just losing that one sale...",
-                    categories: ["customer-experience", "ai-automation", "business-growth"],
-                    isNew: true
-                },
-                {
-                    title: "How AI Automated Every Step of Business in 30 Days",
-                    link: "https://medium.com/@adarshmdys/how-ai-automated-every-step-of-business-in-30-days-4efcc433041b",
-                    pubDate: "2025-09-25 05:42:04",
-                    contentSnippet: "What if your website could think, learn, and grow your business 24/7 without human intervention? Welcome to the era of AI-powered websites that integrate seamlessly...",
-                    categories: ["crm-chatbot-automation", "voice-cloning-business", "business-automation"]
-                },
-                {
-                    title: "AI vs Privacy: Are We Trading Freedom for Convenience?",
-                    link: "https://medium.com/@adarshmdys/ai-vs-privacy-are-we-trading-freedom-for-convenience-343b5a40bf2f",
-                    pubDate: "2025-09-17 06:28:49",
-                    contentSnippet: "Every time you unlock your phone with your face, speak to Alexa or Siri, or scroll past a personalized ad, AI is silently collecting your data...",
-                    categories: ["ai", "google", "deepfakes"]
-                },
-                {
-                    title: "10 AI Tools Just KILLED Your Favorite Apps (Here's What Replaces Them)",
-                    link: "https://medium.com/@adarshmdys/10-ai-tools-just-killed-your-favorite-apps-heres-what-replaces-them-65dab6bea24b",
-                    pubDate: "2025-09-09 16:59:36",
-                    contentSnippet: "10 AI Tools That Will Replace Your Daily Apps — The Revolution is Here. AI Writing Revolution AI Writing Assistants revolutionizing content creation...",
-                    categories: ["india", "ai", "nlp"]
-                },
-                {
-                    title: "Your smartphone is packed with apps that used to feel cutting-edge, but AI tools are now doing the same...",
-                    link: "https://medium.com/@adarshmdys/your-smartphone-is-packed-with-apps-that-used-to-feel-cutting-edge-but-ai-tools-are-now-doing-the-0c7a1b7c5326",
-                    pubDate: "2025-09-03 11:39:15",
-                    contentSnippet: "We'll explore how AI email managers can sort through hundreds of messages without missing important ones, plus revolutionary writing tools...",
-                    categories: ["rpa-tools", "ai", "generative-ai-tools"]
-                },
-                {
-                    title: "The Hidden AI Tools That Are Quietly Making People Rich (While Everyone Else is Stuck in 2020)",
-                    link: "https://medium.com/@adarshmdys/the-hidden-ai-tools-that-are-quietly-making-people-rich-while-everyone-else-is-stuck-in-2020-e457f4ad8a47",
-                    pubDate: "2025-08-19 15:36:21",
-                    contentSnippet: "What happened after I promised to reveal the 'phone magic' secrets. Last week, I told you about discovering that your phone...",
-                    categories: ["rpa-tools", "ai-in-business", "ai"]
-                }
-            ];
-        }
+        try {
+            const response = await fetch('https://api.rss2json.com/v1/api.json?rss_url=https://medium.com/feed/@adarshmdys');
 
-        // FIXED: Enhanced thumbnail extraction with corrected patterns
-        extractThumbnail(post) {
-            const content = post.content || post.description || '';
-
-            // Try multiple extraction methods in order of reliability
-            const methods = [
-                // Method 1: Look for Medium CDN URLs (most reliable)
-                () => {
-                    const cdnPattern = /https:\/\/cdn-images-1\.medium\.com\/[^\s"'<>]+/;
-                    const match = content.match(cdnPattern);
-                    return match ? match[0] : null;
-                },
-
-                // Method 2: Extract from img src attributes
-                () => {
-                    const imgPattern = /<img[^>]+src=["']([^"']+)["']/i;
-                    const match = content.match(imgPattern);
-                    return match ? match[1] : null;
-                },
-
-                // Method 3: Look for any image URLs in content
-                () => {
-                    const urlPattern = /https?:\/\/[^\s"'<>]+\.(jpg|jpeg|png|gif|webp)/i;
-                    const match = content.match(urlPattern);
-                    return match ? match[0] : null;
-                }
-            ];
-
-            // Try each method
-            for (const method of methods) {
-                const result = method();
-                if (result && this.isValidImageUrl(result)) {
-                    return result;
-                }
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
             }
 
-            // Fallback: Create themed placeholder
-            return `https://via.placeholder.com/400x250/1a1a2e/00ffff?text=${encodeURIComponent(post.title.substring(0, 30).replace(/[^a-zA-Z0-9\s]/g, ''))}`;
-        }
+            const data = await response.json();
 
-        // Helper to validate image URLs
-        isValidImageUrl(url) {
-            return url && 
-                   typeof url === 'string' && 
-                   url.length > 10 && 
-                   url.startsWith('http') &&
-                   !url.includes('undefined') &&
-                   !url.includes('null');
-        }
-
-        // Enhanced API fetching with better cache busting
-        async fetchFromMultipleSources() {
-            const timestamp = Date.now();
-            const randomParam = Math.random().toString(36).substring(7);
-
-            const sources = [
-                `https://api.rss2json.com/v1/api.json?rss_url=https://medium.com/feed/@adarshmdys&count=10&cb=${timestamp}&r=${randomParam}`,
-                `https://api.rss2json.com/v1/api.json?rss_url=https%3A%2F%2Fmedium.com%2Ffeed%2F%40adarshmdys&cb=${timestamp}`,
-            ];
-
-            for (let i = 0; i < sources.length; i++) {
-                try {
-                    console.log(`🔄 Trying API source ${i + 1}...`);
-
-                    const response = await fetch(sources[i], {
-                        method: 'GET',
-                        headers: {
-                            'Cache-Control': 'no-cache, no-store, must-revalidate',
-                            'Pragma': 'no-cache',
-                            'Expires': '0',
-                            'User-Agent': 'Mozilla/5.0 (compatible; BlogReader/1.0)'
-                        },
-                        cache: 'no-store'
-                    });
-
-                    if (!response.ok) continue;
-
-                    const data = await response.json();
-
-                    if (data.status === 'ok' && data.items && data.items.length > 0) {
-                        const posts = data.items.filter(item => 
-                            item.title && 
-                            item.link && 
-                            !item.title.toLowerCase().includes('response')
-                        ).slice(0, 6);
-
-                        if (posts.length > 0) {
-                            console.log(`✅ API Success! Got ${posts.length} posts from source ${i + 1}`);
-                            return posts;
-                        }
-                    }
-
-                } catch (error) {
-                    console.log(`❌ API source ${i + 1} failed:`, error.message);
-                    continue;
-                }
+            if (data.status !== 'ok' || !data.items || data.items.length === 0) {
+                throw new Error('No blog posts found');
             }
 
-            console.log('⚠️ All API sources failed, using fallback posts');
-            return null;
-        }
+            const blogPosts = data.items.filter(item => 
+                item.title && 
+                item.link && 
+                !item.title.toLowerCase().includes('response') &&
+                item.categories && item.categories.length > 0
+            );
 
-        // Initialize with immediate post display
-        init() {
-            console.log('🚀 Fixed Medium blog system starting...');
-
-            // GUARANTEE: Show posts immediately including today's NEW post
-            this.displayPosts(this.fallbackPosts.slice(0, 6));
-
-            // Try to get fresh data in background
-            setTimeout(() => {
-                this.backgroundRefresh();
-            }, 2000);
-
-            // Set up 2-minute refresh interval
-            this.refreshInterval = setInterval(() => {
-                this.backgroundRefresh();
-            }, 120000);
-        }
-
-        // Background refresh that never disrupts user
-        async backgroundRefresh() {
-            console.log('🔄 Background refresh starting (posts remain visible)...');
-
-            if (this.loadingElement) {
-                this.loadingElement.style.display = 'block';
+            if (blogPosts.length === 0) {
+                throw new Error('No blog posts available');
             }
 
-            try {
-                const freshPosts = await this.fetchFromMultipleSources();
+            const postsToShow = blogPosts.slice(0, 6);
 
-                if (freshPosts && freshPosts.length > 0) {
-                    console.log('✅ Background refresh successful! Updating posts...');
-                    this.displayPosts(freshPosts);
-                } else {
-                    console.log('⚠️ Background refresh failed, keeping current posts');
-                }
+            const blogPostsHTML = postsToShow.map(post => {
+                const thumbnailMatch = post.content.match(/<img[^>]+src="([^">]+)"/);
+                const thumbnail = thumbnailMatch ? thumbnailMatch[1] : 'https://via.placeholder.com/400x200/00ffff/000000?text=Medium+Article';
 
-                if (this.loadingElement) this.loadingElement.style.display = 'none';
-                if (this.errorElement) this.errorElement.style.display = 'none';
+                const cleanDescription = post.contentSnippet || 
+                    post.content.replace(/<[^>]*>/g, '').substring(0, 150) + '...';
 
-            } catch (error) {
-                console.log('⚠️ Background refresh error:', error);
-                if (this.loadingElement) this.loadingElement.style.display = 'none';
-            }
-        }
-
-        // FIXED: Display posts with proper thumbnail handling
-        displayPosts(posts) {
-            if (!this.blogGridElement) return;
-
-            const postsToShow = posts.slice(0, 6);
-
-            const postsHTML = postsToShow.map((post, index) => {
-                // FIXED: Use enhanced thumbnail extraction
-                const thumbnail = this.extractThumbnail(post);
-
-                const description = post.contentSnippet || 
-                    (post.content ? post.content.replace(/<[^>]*>/g, '').substring(0, 150) + '...' : '') ||
-                    "Click to read the full article on Medium.";
-
-                const publishDate = (() => {
-                    try {
-                        return new Date(post.pubDate).toLocaleDateString('en-US', {
-                            year: 'numeric',
-                            month: 'short',
-                            day: 'numeric'
-                        });
-                    } catch {
-                        return 'Recent';
-                    }
-                })();
-
-                const isNew = (() => {
-                    try {
-                        const today = new Date().toDateString();
-                        const postDate = new Date(post.pubDate).toDateString();
-                        return postDate === today || post.isNew;
-                    } catch {
-                        return post.isNew || false;
-                    }
-                })();
+                const publishDate = new Date(post.pubDate).toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric'
+                });
 
                 return `
-                    <div class="portfolio-item" style="position: relative;">
-                        ${isNew ? '<div style="position: absolute; top: 10px; right: 10px; background: #00ffff; color: #000; padding: 4px 8px; border-radius: 4px; font-size: 0.8rem; font-weight: bold; z-index: 1;">NEW</div>' : ''}
+                    <div class="portfolio-item">
                         <div class="portfolio-category">Blog Post</div>
-                        <div style="
-                            width: 100%; 
-                            height: 200px; 
-                            background-image: url('${thumbnail}'); 
-                            background-size: cover; 
-                            background-position: center; 
-                            border-radius: 10px; 
-                            margin-bottom: 20px; 
-                            background-color: #1a1a2e;
-                            border: 1px solid rgba(0,255,255,0.2);
-                            box-shadow: inset 0 0 20px rgba(0,255,255,0.1);
-                        "></div>
+                        <div style="width: 100%; height: 200px; background-image: url('${thumbnail}'); background-size: cover; background-position: center; border-radius: 10px; margin-bottom: 20px;"></div>
                         <h3 class="portfolio-title">${post.title}</h3>
-                        <p class="portfolio-description">${description}</p>
+                        <p class="portfolio-description">${cleanDescription}</p>
                         <div class="portfolio-tech">
                             <span class="tech-tag">${publishDate}</span>
-                            ${(post.categories || []).slice(0, 3).map(cat => `<span class="tech-tag">${cat}</span>`).join('')}
+                            ${post.categories.slice(0, 3).map(cat => `<span class="tech-tag">${cat}</span>`).join('')}
                         </div>
                         <a href="${post.link}" target="_blank" class="portfolio-btn">Read Article</a>
                     </div>
                 `;
             }).join('');
 
-            this.blogGridElement.innerHTML = postsHTML;
-            console.log(`📊 Displaying ${postsToShow.length} posts with fixed thumbnails and latest content`);
-        }
+            loadingElement.style.display = 'none';
+            blogGridElement.innerHTML = blogPostsHTML;
+            blogGridElement.style.display = 'grid';
 
-        // Cleanup
-        destroy() {
-            if (this.refreshInterval) {
-                clearInterval(this.refreshInterval);
-            }
+        } catch (error) {
+            console.error('Error fetching Medium posts:', error);
+            loadingElement.style.display = 'none';
+            errorElement.style.display = 'block';
         }
     }
 
-    // Initialize the fixed blog manager
-    let fixedBlogManager = null;
-
-    // Update navigation
+    // Add navigation link update
     function updateNavigation() {
         const navMenu = document.getElementById('nav-menu');
-        if (navMenu && !navMenu.querySelector('a[href="#blog"]')) {
+        if (navMenu) {
             const contactLink = navMenu.querySelector('a[href="#contact"]');
             if (contactLink) {
                 const blogLink = document.createElement('a');
@@ -2020,15 +1793,11 @@
         }
     }
 
-    // Initialize everything
+    // Initialize when DOM is loaded
     document.addEventListener('DOMContentLoaded', function() {
         setTimeout(() => {
             updateNavigation();
-
-            // Start the fixed blog manager
-            fixedBlogManager = new FixedMediumBlogManager();
-            fixedBlogManager.init();
-
+            fetchMediumPosts();
         }, 1000);
     });
 
